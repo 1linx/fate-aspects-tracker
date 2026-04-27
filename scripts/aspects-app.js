@@ -69,7 +69,7 @@ class AspectTrackerApp extends foundry.applications.api.HandlebarsApplicationMix
       ...systemAspects,
       ...charAspects,
       ...(manualAspects.length && (systemAspects.length || charAspects.length)
-        ? [{ id: 'manual-divider', type: 'heading', text: 'Other Aspects', isHeading: true, isAspect: false, isSubheading: false }]
+        ? [{ id: 'manual-divider', type: 'divider', isAspect: false, isSubheading: false }]
         : []),
       ...manualAspects,
     ];

@@ -26,7 +26,7 @@ class AspectTrackerApp extends foundry.applications.api.HandlebarsApplicationMix
       resizable: true,
       minimizable: true,
     },
-    position: { width: 380, height: 480 },
+    position: { width: 580, height: 680 },
     actions: {
       invokeAspect: AspectTrackerApp._onInvokeAspect,
       compelAspect:  AspectTrackerApp._onCompelAspect,

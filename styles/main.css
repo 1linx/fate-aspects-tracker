@@ -159,7 +159,7 @@
   margin: 10px 0 4px;
   padding: 4px 0 3px;
   border-bottom: 1px solid currentColor;
-  font-size: 1em;
+  font-size: 2em !important;
   font-weight: bold;
   letter-spacing: 0.04em;
   text-transform: uppercase;

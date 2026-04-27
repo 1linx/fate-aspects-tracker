@@ -1,0 +1,29 @@
+<div class="aspects-editor-body">
+
+  <p class="aspects-editor-hint">
+    Enter one item per line. Use <code># Heading</code> for headings and <code>## Sub-heading</code> for sub-headings. All other lines are aspects.
+  </p>
+
+  <pre class="aspects-editor-example"><span class="aspects-editor-example-label">Example:</span>
+# Scene Aspects
+On Fire!
+Slippery Floor
+
+## Character Aspects — Alice
+Reluctant Hero
+Sharp Tongue</pre>
+
+  <textarea
+    name="aspectsText"
+    class="aspects-editor-textarea"
+    placeholder="# Scene Aspects&#10;On Fire!&#10;Slippery Floor"
+    spellcheck="false"
+  >{{aspectsText}}</textarea>
+
+  <div class="aspects-editor-footer">
+    <button type="button" data-action="saveAspects" class="aspects-btn aspects-btn--primary">
+      <i class="fas fa-save"></i> Save Aspects
+    </button>
+  </div>
+
+</div>

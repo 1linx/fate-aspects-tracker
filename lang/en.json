@@ -1,0 +1,16 @@
+{
+  "ASPECTS.WindowTitle":       "Aspects",
+  "ASPECTS.OpenWindow":        "FATE: Open Aspects",
+  "ASPECTS.EditorTitle":       "Edit Aspects",
+  "ASPECTS.Saved":             "Aspects saved.",
+  "ASPECTS.SettingsTitle":     "Aspect Tracker Style",
+  "ASPECTS.FontSize":          "Text Size",
+  "ASPECTS.FontColour":        "Text Colour",
+  "ASPECTS.Save":              "Save",
+  "ASPECTS.Invoke":            "Invoke",
+  "ASPECTS.Compel":            "Compel",
+  "ASPECTS.InvokeMessage":     "{user} invokes {aspect}",
+  "ASPECTS.CompelMessage":     "{user} compels {aspect}",
+  "ASPECTS.OpenForAll":        "Open for All",
+  "ASPECTS.EditAspects":       "Edit Aspects"
+}

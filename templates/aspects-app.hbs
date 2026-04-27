@@ -1,0 +1,62 @@
+<div class="aspects-content" style="--at-text-color: {{fontColour}}; font-size: {{fontSize}}; background: {{bgStyle}}">
+
+  {{!-- ── Empty state ─────────────────────────────────────────── --}}
+  {{#if noAspects}}
+  <div class="aspects-empty">
+    <i class="fas fa-scroll"></i>
+    {{#if isGM}}
+      <p>No aspects have been added yet.<br>Click <strong>Edit Aspects</strong> below to get started.</p>
+    {{else}}
+      <p>No aspects have been configured yet.<br>Ask your GM to add some.</p>
+    {{/if}}
+  </div>
+
+  {{!-- ── Aspects list ─────────────────────────────────────────── --}}
+  {{else}}
+  <div class="aspects-list">
+    {{#each aspects}}
+      {{#if isHeading}}
+        <h2 class="aspects-heading">{{text}}</h2>
+      {{else if isSubheading}}
+        <h3 class="aspects-subheading">{{text}}</h3>
+      {{else}}
+        <div class="aspect-row">
+          <span class="aspect-text">{{text}}</span>
+          <div class="aspect-actions">
+            <button type="button"
+                    class="aspect-btn aspect-btn--invoke"
+                    data-action="invokeAspect"
+                    data-aspect="{{text}}"
+                    title="Invoke: post to chat that you invoke this aspect">
+              Invoke
+            </button>
+            <button type="button"
+                    class="aspect-btn aspect-btn--compel"
+                    data-action="compelAspect"
+                    data-aspect="{{text}}"
+                    title="Compel: post to chat that you compel this aspect">
+              Compel
+            </button>
+          </div>
+        </div>
+      {{/if}}
+    {{/each}}
+  </div>
+  {{/if}}
+
+  {{!-- ── Footer controls ─────────────────────────────────────── --}}
+  <div class="aspects-footer">
+    {{#if isGM}}
+    <button type="button" data-action="openEditor" class="aspects-btn" title="Edit the aspects list">
+      <i class="fas fa-edit"></i> Edit Aspects
+    </button>
+    <button type="button" data-action="openForAll" class="aspects-btn" title="Open this window on all player screens">
+      <i class="fas fa-users"></i> Open for All
+    </button>
+    {{/if}}
+    <button type="button" data-action="openSettings" class="aspects-btn aspects-btn--style" title="Adjust text size and colour">
+      <i class="fas fa-text-height"></i> Style
+    </button>
+  </div>
+
+</div>

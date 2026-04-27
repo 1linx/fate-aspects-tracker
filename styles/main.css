@@ -70,7 +70,7 @@
 .aspects-heading,
 .aspects-subheading,
 .aspects-empty {
-  color: var(--at-text-color, #ffffff);
+  color: var(--at-text-color, #ffffff) !important;
 }
 
 /* ── Shared button base ─────────────────────────────────────────── */
@@ -195,7 +195,7 @@
 
 .aspect-text {
   flex: 1;
-  font-style: bold;
+  font-size: 1.3em;
   line-height: 1.4;
 }
 

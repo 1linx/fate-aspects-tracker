@@ -78,6 +78,9 @@ Hooks.once('ready', () => {
 
     // Re-read situation aspects whenever the active scene changes
     Hooks.on('canvasReady', () => FateAspects.App.onAspectsChange());
+
+    // Character aspects: re-render when any actor is updated
+    Hooks.on('updateActor', () => FateAspects.App.onAspectsChange());
   }
 });
 

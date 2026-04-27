@@ -63,17 +63,17 @@ class AspectTrackerApp extends foundry.applications.api.HandlebarsApplicationMix
     }));
 
     const systemAspects = AspectTrackerApp._getSystemAspects();
+    const charAspects   = AspectTrackerApp._getCharacterAspects();
 
-    let aspects;
-    if (systemAspects.length && manualAspects.length) {
-      aspects = [
-        ...systemAspects,
-        { id: 'manual-divider', type: 'heading', text: 'Other Aspects', isHeading: true, isAspect: false, isSubheading: false },
-        ...manualAspects,
-      ];
-    } else {
-      aspects = [...systemAspects, ...manualAspects];
-    }
+    const sections = [
+      ...systemAspects,
+      ...charAspects,
+      ...(manualAspects.length && (systemAspects.length || charAspects.length)
+        ? [{ id: 'manual-divider', type: 'heading', text: 'Other Aspects', isHeading: true, isAspect: false, isSubheading: false }]
+        : []),
+      ...manualAspects,
+    ];
+    const aspects = sections;
 
     return {
       isGM:      game.user.isGM,
@@ -118,6 +118,38 @@ class AspectTrackerApp extends foundry.applications.api.HandlebarsApplicationMix
       items.push({ id: 'sys-game-h', type: 'heading', text: 'Game Aspects', isHeading: true, isAspect: false, isSubheading: false });
       for (const a of gameActive) {
         items.push({ id: `sys-game-${a.name}`, type: 'aspect', text: a.name, isAspect: true, isHeading: false, isSubheading: false });
+      }
+    }
+
+    return items;
+  }
+
+  static _getCharacterAspects() {
+    if (game.system.id !== 'fate-core-official') return [];
+    const items = [];
+
+    const actors = game.actors.filter(a =>
+      a.type === 'fate-core-official' &&
+      a.testUserPermission(game.user, 'OBSERVER')
+    );
+
+    for (const actor of actors) {
+      const aspects = Object.values(actor.system.aspects ?? {})
+        .filter(a => a.value?.trim());
+      if (!aspects.length) continue;
+
+      items.push({
+        id: `char-${actor.id}-h`,
+        type: 'heading', text: actor.name,
+        isHeading: true, isAspect: false, isSubheading: false,
+      });
+
+      for (const a of aspects) {
+        items.push({
+          id: `char-${actor.id}-${a.name}`,
+          type: 'aspect', text: a.value, label: a.name,
+          isAspect: true, isHeading: false, isSubheading: false,
+        });
       }
     }
 

@@ -199,6 +199,15 @@
   line-height: 1.4;
 }
 
+.aspect-label {
+  font-size: 0.65em;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  opacity: 0.55;
+  font-style: normal;
+  font-weight: bold;
+}
+
 .aspect-actions {
   display: flex;
   gap: 4px;

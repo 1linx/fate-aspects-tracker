@@ -21,7 +21,7 @@
         <h3 class="aspects-subheading">{{text}}</h3>
       {{else}}
         <div class="aspect-row">
-          <span class="aspect-text">{{text}}</span>
+          <span class="aspect-text">{{#if label}}<span class="aspect-label">{{label}}</span> {{/if}}{{text}}</span>
           <div class="aspect-actions">
             <button type="button"
                     class="aspect-btn aspect-btn--invoke"

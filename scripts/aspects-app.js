@@ -218,42 +218,38 @@ class AspectTrackerApp extends foundry.applications.api.HandlebarsApplicationMix
       </div>
     ` : '';
 
-    const result = await new Promise(resolve => {
-      new Dialog({
-        title: game.i18n.localize('ASPECTS.SettingsTitle'),
-        content: `
-          <form class="aspects-settings-form">
-            <div class="form-group">
-              <label>Text Size</label>
-              <select name="fontSize">${optionsHtml}</select>
-            </div>
-            ${gmFields}
-          </form>
-        `,
-        buttons: {
-          save: {
-            icon: '<i class="fas fa-save"></i>',
-            label: game.i18n.localize('ASPECTS.Save'),
-            callback: html => {
-              const el  = html[0];
-              const out = { fontSize: el.querySelector('[name="fontSize"]').value };
-              if (isGM) {
-                out.fontColour = el.querySelector('[name="fontColour"]').value;
-                out.bgColour   = el.querySelector('[name="bgColour"]').value;
-                out.bgOpacity  = Number(el.querySelector('[name="bgOpacity"]').value);
-              }
-              resolve(out);
-            },
-          },
-          cancel: {
-            icon: '<i class="fas fa-times"></i>',
-            label: 'Cancel',
-            callback: () => resolve(null),
+    const result = await foundry.applications.api.DialogV2.wait({
+      window: { title: game.i18n.localize('ASPECTS.SettingsTitle') },
+      content: `
+        <div class="form-group">
+          <label>Text Size</label>
+          <select name="fontSize">${optionsHtml}</select>
+        </div>
+        ${gmFields}
+      `,
+      buttons: [
+        {
+          action:   'save',
+          label:    game.i18n.localize('ASPECTS.Save'),
+          icon:     'fas fa-save',
+          default:  true,
+          callback: (_event, button) => {
+            const f   = button.form;
+            const out = { fontSize: f.elements.fontSize.value };
+            if (isGM) {
+              out.fontColour = f.elements.fontColour.value;
+              out.bgColour   = f.elements.bgColour.value;
+              out.bgOpacity  = Number(f.elements.bgOpacity.value);
+            }
+            return out;
           },
         },
-        default: 'save',
-        close:   () => resolve(null),
-      }).render(true);
+        {
+          action: 'cancel',
+          label:  'Cancel',
+          icon:   'fas fa-times',
+        },
+      ],
     });
 
     if (!result) return;

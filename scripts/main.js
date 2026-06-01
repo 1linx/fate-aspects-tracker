@@ -89,14 +89,15 @@ Hooks.once('ready', () => {
 // ----------------------------------------------------------------
 
 Hooks.on('getSceneControlButtons', controls => {
-  const tokenControls = controls.find(c => c.name === 'token');
-  if (!tokenControls) return;
+  const tokenLayer = controls.tokens ?? controls.token;
+  if (!tokenLayer) return;
 
-  tokenControls.tools.push({
+  tokenLayer.tools['fate-aspects'] = {
     name:    'fate-aspects',
     title:   game.i18n.localize('ASPECTS.OpenWindow'),
     icon:    'fas fa-scroll',
+    visible: true,
+    toggle:  false,
     onClick: () => FateAspects.App.toggle(),
-    button:  true,
-  });
+  };
 });

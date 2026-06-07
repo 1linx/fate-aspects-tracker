@@ -98,6 +98,7 @@ Hooks.on('getSceneControlButtons', controls => {
     icon:    'fas fa-scroll',
     visible: true,
     toggle:  false,
+    button:  true,
     onClick: () => FateAspects.App.toggle(),
   };
 });

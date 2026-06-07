@@ -266,7 +266,7 @@ class AspectTrackerApp extends foundry.applications.api.HandlebarsApplicationMix
   // ----------------------------------------------------------------
 
   static open() {
-    if (!FateAspects._app) FateAspects._app = new AspectTrackerApp();
+    if (!FateAspects._app?.rendered) FateAspects._app = new AspectTrackerApp();
     FateAspects._app.render({ force: true });
   }
 

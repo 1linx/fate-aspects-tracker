@@ -28,11 +28,12 @@ class AspectTrackerApp extends foundry.applications.api.HandlebarsApplicationMix
     },
     position: { width: 580, height: 680 },
     actions: {
-      invokeAspect: AspectTrackerApp._onInvokeAspect,
-      compelAspect:  AspectTrackerApp._onCompelAspect,
-      openEditor:    AspectTrackerApp._onOpenEditor,
-      openForAll:    AspectTrackerApp._onOpenForAll,
-      openSettings:  AspectTrackerApp._onOpenSettings,
+      invokeAspect:    AspectTrackerApp._onInvokeAspect,
+      compelAspect:    AspectTrackerApp._onCompelAspect,
+      openEditor:      AspectTrackerApp._onOpenEditor,
+      openForAll:      AspectTrackerApp._onOpenForAll,
+      openSettings:    AspectTrackerApp._onOpenSettings,
+      toggleHideActor: AspectTrackerApp._onToggleHideActor,
     },
   };
 
@@ -127,6 +128,10 @@ class AspectTrackerApp extends foundry.applications.api.HandlebarsApplicationMix
   static _getCharacterAspects() {
     if (game.system.id !== 'fate-core-official') return [];
     const items = [];
+    const isGM  = game.user.isGM;
+
+    const raw    = game.settings.get('fate-aspects-tracker', 'hiddenActors') ?? [];
+    const hidden = new Set(Array.isArray(raw) ? raw : Object.values(raw));
 
     const actors = game.actors.filter(a =>
       a.type === 'fate-core-official' &&
@@ -134,22 +139,37 @@ class AspectTrackerApp extends foundry.applications.api.HandlebarsApplicationMix
     );
 
     for (const actor of actors) {
+      const isHidden = hidden.has(actor.id);
+
+      // Players never see hidden actors
+      if (isHidden && !isGM) continue;
+
       const aspects = Object.values(actor.system.aspects ?? {})
         .filter(a => a.value?.trim());
-      if (!aspects.length) continue;
+
+      // Skip actors with no aspects — unless hidden, so GM can still see the heading to unhide
+      if (!aspects.length && !isHidden) continue;
 
       items.push({
-        id: `char-${actor.id}-h`,
-        type: 'heading', text: actor.name,
-        isHeading: true, isAspect: false, isSubheading: false,
+        id:           `char-${actor.id}-h`,
+        type:         'heading',
+        text:         actor.name,
+        isHeading:    true,
+        isAspect:     false,
+        isSubheading: false,
+        isCharHeading: true,
+        actorId:      actor.id,
+        isHidden,
       });
 
-      for (const a of aspects) {
-        items.push({
-          id: `char-${actor.id}-${a.name}`,
-          type: 'aspect', text: a.value, label: a.name,
-          isAspect: true, isHeading: false, isSubheading: false,
-        });
+      if (!isHidden) {
+        for (const a of aspects) {
+          items.push({
+            id: `char-${actor.id}-${a.name}`,
+            type: 'aspect', text: a.value, label: a.name,
+            isAspect: true, isHeading: false, isSubheading: false,
+          });
+        }
       }
     }
 
@@ -259,6 +279,15 @@ class AspectTrackerApp extends foundry.applications.api.HandlebarsApplicationMix
       await game.settings.set('fate-aspects-tracker', 'bgColour',   result.bgColour);
       await game.settings.set('fate-aspects-tracker', 'bgOpacity',  result.bgOpacity);
     }
+  }
+
+  static async _onToggleHideActor(_event, target) {
+    const actorId = target.dataset.actorId;
+    const raw    = game.settings.get('fate-aspects-tracker', 'hiddenActors') ?? [];
+    const hidden = new Set(Array.isArray(raw) ? raw : Object.values(raw));
+    if (hidden.has(actorId)) hidden.delete(actorId);
+    else hidden.add(actorId);
+    await game.settings.set('fate-aspects-tracker', 'hiddenActors', Array.from(hidden));
   }
 
   // ----------------------------------------------------------------

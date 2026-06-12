@@ -16,7 +16,22 @@
   <div class="aspects-list">
     {{#each aspects}}
       {{#if isHeading}}
-        <h2 class="aspects-heading">{{text}}</h2>
+        {{#if isCharHeading}}
+          <div class="char-heading-row{{#if isHidden}} char-heading-row--hidden{{/if}}">
+            <h2 class="aspects-heading">{{text}}</h2>
+            {{#if @root.isGM}}
+              <button type="button"
+                      class="char-hide-btn"
+                      data-action="toggleHideActor"
+                      data-actor-id="{{actorId}}"
+                      title="{{#if isHidden}}Show this character's aspects{{else}}Hide this character's aspects{{/if}}">
+                <i class="fas {{#if isHidden}}fa-eye-slash{{else}}fa-eye{{/if}}"></i>
+              </button>
+            {{/if}}
+          </div>
+        {{else}}
+          <h2 class="aspects-heading">{{text}}</h2>
+        {{/if}}
       {{else if isSubheading}}
         <h3 class="aspects-subheading">{{text}}</h3>
       {{else}}

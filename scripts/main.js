@@ -57,8 +57,9 @@ Hooks.once('init', () => {
     onChange: () => FateAspects.App.onStyleChange(),
   });
 
-  // Set of actor IDs hidden by the GM. Hidden actors are invisible to players.
-  game.settings.register('fate-aspects-tracker', 'hiddenActors', {
+  // Set of actor IDs explicitly shown by the GM. Actors NOT in this set are hidden from players.
+  // Default is empty so all characters start hidden until the GM reveals them.
+  game.settings.register('fate-aspects-tracker', 'visibleActors', {
     scope:   'world',
     config:  false,
     type:    Object,

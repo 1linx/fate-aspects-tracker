@@ -130,16 +130,17 @@ class AspectTrackerApp extends foundry.applications.api.HandlebarsApplicationMix
     const items = [];
     const isGM  = game.user.isGM;
 
-    const raw    = game.settings.get('fate-aspects-tracker', 'hiddenActors') ?? [];
-    const hidden = new Set(Array.isArray(raw) ? raw : Object.values(raw));
+    const raw     = game.settings.get('fate-aspects-tracker', 'visibleActors') ?? [];
+    const visible = new Set(Array.isArray(raw) ? raw : Object.values(raw));
 
     const actors = game.actors.filter(a =>
       a.type === 'fate-core-official' &&
-      a.testUserPermission(game.user, 'OBSERVER')
+      a.testUserPermission(game.user, CONST.DOCUMENT_OWNERSHIP_LEVELS.OBSERVER)
     );
 
     for (const actor of actors) {
-      const isHidden = hidden.has(actor.id);
+      // Hidden = not in the explicit visible set (all hidden by default)
+      const isHidden = !visible.has(actor.id);
 
       // Players never see hidden actors
       if (isHidden && !isGM) continue;
@@ -147,18 +148,18 @@ class AspectTrackerApp extends foundry.applications.api.HandlebarsApplicationMix
       const aspects = Object.values(actor.system.aspects ?? {})
         .filter(a => a.value?.trim());
 
-      // Skip actors with no aspects — unless hidden, so GM can still see the heading to unhide
+      // Skip actors with no aspects — unless hidden, so GM can still see the heading to reveal them
       if (!aspects.length && !isHidden) continue;
 
       items.push({
-        id:           `char-${actor.id}-h`,
-        type:         'heading',
-        text:         actor.name,
-        isHeading:    true,
-        isAspect:     false,
-        isSubheading: false,
+        id:            `char-${actor.id}-h`,
+        type:          'heading',
+        text:          actor.name,
+        isHeading:     true,
+        isAspect:      false,
+        isSubheading:  false,
         isCharHeading: true,
-        actorId:      actor.id,
+        actorId:       actor.id,
         isHidden,
       });
 
@@ -283,11 +284,11 @@ class AspectTrackerApp extends foundry.applications.api.HandlebarsApplicationMix
 
   static async _onToggleHideActor(_event, target) {
     const actorId = target.dataset.actorId;
-    const raw    = game.settings.get('fate-aspects-tracker', 'hiddenActors') ?? [];
-    const hidden = new Set(Array.isArray(raw) ? raw : Object.values(raw));
-    if (hidden.has(actorId)) hidden.delete(actorId);
-    else hidden.add(actorId);
-    await game.settings.set('fate-aspects-tracker', 'hiddenActors', Array.from(hidden));
+    const raw     = game.settings.get('fate-aspects-tracker', 'visibleActors') ?? [];
+    const visible = new Set(Array.isArray(raw) ? raw : Object.values(raw));
+    if (visible.has(actorId)) visible.delete(actorId);
+    else visible.add(actorId);
+    await game.settings.set('fate-aspects-tracker', 'visibleActors', Array.from(visible));
   }
 
   // ----------------------------------------------------------------

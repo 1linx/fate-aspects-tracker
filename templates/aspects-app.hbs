@@ -71,6 +71,13 @@
     <button type="button" data-action="openSettings" class="aspects-btn aspects-btn--style" title="Adjust text size and colour">
       <i class="fas fa-text-height"></i> Style
     </button>
+    <button type="button" data-action="togglePlayerPreview" class="aspects-btn aspects-btn--preview" title="Preview what players see">
+      <i class="fas fa-eye"></i> Player View
+    </button>
+    {{else if playerPreview}}
+    <button type="button" data-action="togglePlayerPreview" class="aspects-btn aspects-btn--preview-exit" title="Return to GM view">
+      <i class="fas fa-user-shield"></i> Back to GM View
+    </button>
     {{/if}}
   </div>
 

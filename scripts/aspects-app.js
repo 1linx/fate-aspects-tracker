@@ -33,7 +33,8 @@ class AspectTrackerApp extends foundry.applications.api.HandlebarsApplicationMix
       openEditor:      AspectTrackerApp._onOpenEditor,
       openForAll:      AspectTrackerApp._onOpenForAll,
       openSettings:    AspectTrackerApp._onOpenSettings,
-      toggleHideActor: AspectTrackerApp._onToggleHideActor,
+      toggleHideActor:    AspectTrackerApp._onToggleHideActor,
+      togglePlayerPreview: AspectTrackerApp._onTogglePlayerPreview,
     },
   };
 
@@ -49,6 +50,10 @@ class AspectTrackerApp extends foundry.applications.api.HandlebarsApplicationMix
   // ----------------------------------------------------------------
 
   async _prepareContext(_options) {
+    const isGM          = game.user.isGM;
+    const playerPreview = isGM && (this._playerPreview ?? false);
+    const effectiveGM   = isGM && !playerPreview;
+
     const raw        = game.settings.get('fate-aspects-tracker', 'aspects') ?? [];
     const fontSize   = game.settings.get('fate-aspects-tracker', 'fontSize');
     const fontColour = game.settings.get('fate-aspects-tracker', 'fontColour');
@@ -64,7 +69,7 @@ class AspectTrackerApp extends foundry.applications.api.HandlebarsApplicationMix
     }));
 
     const systemAspects = AspectTrackerApp._getSystemAspects();
-    const charAspects   = AspectTrackerApp._getCharacterAspects();
+    const charAspects   = AspectTrackerApp._getCharacterAspects(effectiveGM);
 
     const sections = [
       ...systemAspects,
@@ -77,7 +82,8 @@ class AspectTrackerApp extends foundry.applications.api.HandlebarsApplicationMix
     const aspects = sections;
 
     return {
-      isGM:      game.user.isGM,
+      isGM:          effectiveGM,
+      playerPreview,
       aspects,
       noAspects: aspects.length === 0,
       fontSize,
@@ -125,10 +131,9 @@ class AspectTrackerApp extends foundry.applications.api.HandlebarsApplicationMix
     return items;
   }
 
-  static _getCharacterAspects() {
+  static _getCharacterAspects(isGM = game.user.isGM) {
     if (game.system.id !== 'fate-core-official') return [];
     const items = [];
-    const isGM  = game.user.isGM;
 
     const raw     = game.settings.get('fate-aspects-tracker', 'visibleActors') ?? [];
     const visible = new Set(Array.isArray(raw) ? raw : Object.values(raw));
@@ -280,6 +285,11 @@ class AspectTrackerApp extends foundry.applications.api.HandlebarsApplicationMix
       await game.settings.set('fate-aspects-tracker', 'bgColour',   result.bgColour);
       await game.settings.set('fate-aspects-tracker', 'bgOpacity',  result.bgOpacity);
     }
+  }
+
+  static _onTogglePlayerPreview(_event, _target) {
+    this._playerPreview = !this._playerPreview;
+    this.render({ force: true });
   }
 
   static async _onToggleHideActor(_event, target) {

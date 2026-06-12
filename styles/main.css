@@ -111,6 +111,29 @@
   border-color: rgba(80, 140, 200, 0.7);
 }
 
+.aspects-btn--preview {
+  background: rgba(40, 20, 60, 0.75);
+  border-color: rgba(150, 80, 200, 0.35);
+  color: var(--at-text-color, #ffffff) !important;
+}
+
+.aspects-btn--preview:hover:not([disabled]) {
+  background: rgba(60, 30, 90, 0.9);
+  border-color: rgba(150, 80, 200, 0.7);
+}
+
+.aspects-btn--preview-exit {
+  background: rgba(60, 35, 10, 0.85);
+  border-color: rgba(220, 140, 40, 0.6);
+  color: var(--at-text-color, #ffffff) !important;
+  font-weight: bold;
+}
+
+.aspects-btn--preview-exit:hover:not([disabled]) {
+  background: rgba(90, 55, 15, 0.95);
+  border-color: rgba(220, 140, 40, 0.9);
+}
+
 /* ── Empty state ────────────────────────────────────────────────── */
 
 .aspects-empty {
